@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <button onclick="storeString()">GETSTRING</button>
+        <p id="accountarea"></p>
+
+        <button onclick="getString()">STORE STRING</button>
+        <p id="contractarea"></p>
+    
+<!-- 
+        <button onclick="readData()"></button>
+        <p id="dataarea"></p> -->
+
+        <p ></p>
+
+        <script>
+
+            // // connect metamask
+
+            // const connectToMetamask = async() => {
+            //     let account;
+            //     if(window.ethereum !== "undefined"){
+            //         const accounts = await ethereum.request({method:"eth_requestsAccounts"});
+            //         account = accounts[0];
+            //         document.getElementById("accountarea").innerHTML= account;
+            //     }
+              
+            // }
+
+            // // connectWallet
+
+            // const connectWallet = async() => {
+
+            //     const ABI=;
+            //     const Address=;
+            //     window.web3 = await new Web3(window.ethereum);
+            //     window.contract = await new window.web3.eth.Contract(ABI,address);
+            //     document.getElementById("contractarea").innerHTML = "connected to wallet";
+              
+            // }
+
+            // // read contract
+
+            // const readData = async () => {
+            //     const data = await window.contract.methods.myCity().call()
+            //     document.getElementById("dataarea").innerHTML = data;
+              
+            // }
+
+
+            // Import web3 library
+const Web3 = require('web3');
+
+// Connect to the local Ethereum node
+const web3 = new Web3('http://localhost:8545');
+
+// Set the contract address and ABI (Application Binary Interface)
+const contractAddress = 'YOUR_CONTRACT_ADDRESS';
+const contractABI = [
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "newString",
+                "type": "string"
+            }
+        ],
+        "name": "storeString",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getString",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
+
+// Create an instance of the contract using the address and ABI
+const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// Store a string value in the contract
+async function storeString(newString) {
+    const accounts = await web3.eth.getAccounts();
+    await contract.methods.storeString(newString).send({ from: accounts[0] });
+}
+
+// Get the stored string value from the contract
+async function getString() {
+    return contract.methods.getString().call();
+}
+
+// Example usage
+storeString('Hello, Smart Contract!').then(() => {
+    getString().then((result) => {
+        console.log('Stored string:', result);
+    });
+});
+
+            </script>
+    </body>
+</html> 

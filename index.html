@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body{
+
+                background-color: palevioletred;
+                font-size: 33px;
+                text-align: center;
+                }
+            button{
+                background-color: aquamarine;
+                font-size: 33px;
+                font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+                    }
+
+                button:hover{
+                background-color: yellow;
+                }
+
+        </style>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    </head>
+<body>
+    <button onclick="connectMetamask()">CONNECT TO METAMASK</button>
+    <p id="accountArea"></p>
+
+    <button onclick="connectWallet()">CONNECT TO WALLET </button>
+    <p id="contractArea"></p>
+
+    <button onclick="readContract()">GET DATA FROM CONTRACT</button>
+    <p id ="dataArea"></p>
+
+
+
+    <script>
+    // connect to Metamask
+    let account;
+    const connectMetamask = async() => {
+        
+        if(window.ethereum !== "undefined"){
+        const accounts = await ethereum.request({method: "eth_requestAccounts"});
+        account = accounts[0];
+        document.getElementById("accountArea").innerHTML = account;
+        }
+      
+    }
+
+    // connect to wallet
+
+    const connectWallet = async() => {
+
+        const ABI=[
+	{
+		"inputs": [],
+		"name": "myCity",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+        ] ;
+
+
+        const address = "0x326F6502f69fA4A932E0475D76A876135FCAbaB5";
+        window.web3 = await new Web3(window.ethereum);
+        window.contract = await new window.web3.eth.Contract(ABI,address);
+        document.getElementById("contractArea").innerHTML = "connected to smart contract";
+
+
+ 
+      
+    }
+
+    // readcontrant
+
+    const readContract= async() => {
+      
+        const data = await window.contract.methods.myCity().call();
+        document.getElementById("dataArea").innerHTML = data;
+    }
+    </script>
+    
+</body>
+</html>
